@@ -1,8 +1,6 @@
 import { Product, Category, Cart, Order, User, AnnouncementBarData, HeroBannerData, StoreSettingsData, AIAsset, AIJob } from './types';
 
-export const API_BASE = typeof window !== 'undefined'
-  ? `http://${window.location.hostname}:8001/api/v1`
-  : (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8001/api/v1');
+export const API_BASE = '/api/v1';
 
 function getAuthHeader(): Record<string, string> {
   if (typeof window === 'undefined') return {};

@@ -11,6 +11,10 @@ const nextConfig = {
         hostname: 'images.unsplash.com',
       },
       {
+        protocol: 'https',
+        hostname: 'raw.githubusercontent.com',
+      },
+      {
         protocol: 'http',
         hostname: '127.0.0.1',
       },
@@ -21,14 +25,15 @@ const nextConfig = {
     ],
   },
   async rewrites() {
+    const backend = process.env.BACKEND_URL || 'http://127.0.0.1:8001';
     return [
       {
         source: '/api/v1/:path*',
-        destination: 'http://127.0.0.1:8001/api/v1/:path*',
+        destination: `${backend}/api/v1/:path*`,
       },
       {
         source: '/media/:path*',
-        destination: 'http://127.0.0.1:8001/media/:path*',
+        destination: `${backend}/media/:path*`,
       },
     ];
   },
