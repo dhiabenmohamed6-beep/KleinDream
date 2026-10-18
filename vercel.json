@@ -4,7 +4,7 @@
     "backend": {
       "root": "backend",
       "framework": "django",
-      "entrypoint": "api/index.py"
+      "entrypoint": "kleindream.wsgi:application"
     },
     "frontend": {
       "root": "frontend",
@@ -12,23 +12,8 @@
     }
   },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": {
-        "service": "backend"
-      }
-    },
-    {
-      "source": "/media/(.*)",
-      "destination": {
-        "service": "backend"
-      }
-    },
-    {
-      "source": "/(.*)",
-      "destination": {
-        "service": "frontend"
-      }
-    }
+    { "source": "/api/(.*)", "destination": { "service": "backend" } },
+    { "source": "/media/(.*)", "destination": { "service": "backend" } },
+    { "source": "/(.*)", "destination": { "service": "frontend" } }
   ]
 }
