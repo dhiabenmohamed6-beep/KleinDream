@@ -24,19 +24,8 @@ const nextConfig = {
       },
     ],
   },
-  async rewrites() {
-    const backend = process.env.BACKEND_URL || 'http://127.0.0.1:8001';
-    return [
-      {
-        source: '/api/v1/:path*',
-        destination: `${backend}/api/v1/:path*`,
-      },
-      {
-        source: '/media/:path*',
-        destination: `${backend}/media/:path*`,
-      },
-    ];
-  },
+  // API/media routing is handled by the root vercel.json rewrites
+  // (./vercel.json) so the same domain serves frontend + backend.
 };
 
 export default nextConfig;
