@@ -52,7 +52,7 @@ export default function Header() {
   const totalItems = cart?.total_items || 0;
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand-border">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand-border" id="main-header">
       {/* Main Bar */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
         
@@ -188,101 +188,117 @@ export default function Header() {
         </div>
       )}
 
-      {/* Mobile Navigation Drawer */}
+      {/* Mobile Navigation Drawer — full-screen overlay, always above everything */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-16 bg-white/98 backdrop-blur-xl z-50 flex flex-col p-5 sm:p-6 overflow-y-auto">
-          {/* Quick Search inside Mobile Menu */}
-          <form onSubmit={handleSearchSubmit} className="mb-6 flex items-center gap-2 bg-brand-light px-3.5 py-2.5 rounded-xl border border-brand-border">
-            <Search className="h-4 w-4 text-brand-secondary flex-shrink-0" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search pieces..."
-              className="w-full bg-transparent border-none text-xs text-brand-charcoal placeholder-brand-secondary focus:outline-none"
-            />
-          </form>
+        <>
+          {/* Backdrop */}
+          <div
+            className="lg:hidden fixed inset-0 z-[9998] bg-black/40 backdrop-blur-sm"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
 
-          <div className="space-y-1 pb-6 border-b border-brand-border">
-            <Link
-              href="/shop"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2.5 text-base font-serif text-brand-charcoal hover:text-brand-lavender"
-            >
-              Shop All Collection
-            </Link>
-            <Link
-              href="/shop?audience=WOMEN"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2.5 text-base font-serif text-brand-charcoal hover:text-brand-lavender"
-            >
-              Women's Wardrobe
-            </Link>
-            <Link
-              href="/shop?audience=MEN"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2.5 text-base font-serif text-brand-charcoal hover:text-brand-lavender"
-            >
-              Men's Wardrobe
-            </Link>
-            <Link
-              href="/shop?audience=KIDS"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2.5 text-base font-serif text-brand-charcoal hover:text-brand-lavender"
-            >
-              Kids & Baby
-            </Link>
-            <Link
-              href="/shop?category=shoes"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between py-2.5 text-base font-serif text-brand-charcoal hover:text-brand-lavender"
-            >
-              <span>Shoes & Footwear</span>
-              <span className="text-[10px] bg-brand-light px-2 py-0.5 rounded text-brand-lavenderDark font-sans font-semibold">3D Real</span>
-            </Link>
-            <Link
-              href="/shop?category=bags"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2.5 text-base font-serif text-brand-charcoal hover:text-brand-lavender"
-            >
-              Leather Goods & Bags
-            </Link>
-            <Link
-              href="/shop?on_sale=true"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2.5 text-base font-serif text-brand-lavenderDark font-medium"
-            >
-              Seasonal Private Sale
-            </Link>
-          </div>
-
-          <div className="pt-6 space-y-3.5 pb-10">
-            {isStoreAdmin && (
-              <Link
-                href="/admin/dashboard"
+          {/* Slide-in Panel */}
+          <div
+            className="lg:hidden fixed inset-y-0 left-0 z-[9999] w-full max-w-xs bg-white shadow-2xl flex flex-col overflow-y-auto"
+            style={{ animation: 'slideInLeft 0.25s cubic-bezier(0.4,0,0.2,1)' }}
+          >
+            {/* Panel Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-brand-border flex-shrink-0">
+              <span className="font-serif text-lg tracking-[0.2em] font-medium text-brand-charcoal uppercase">
+                KleinDream
+              </span>
+              <button
+                type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 p-3 bg-brand-charcoal text-white rounded-xl font-medium text-xs uppercase tracking-wider"
+                className="p-2 text-brand-charcoal hover:text-brand-lavender rounded-lg transition-colors"
+                aria-label="Close menu"
               >
-                <Sparkles className="h-4 w-4 text-brand-lavender" />
-                <span>Executive Admin Studio</span>
-              </Link>
-            )}
-            <Link
-              href={isAuthenticated ? "/account" : "/auth/login"}
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-xs uppercase tracking-wider font-semibold text-brand-charcoal hover:text-brand-lavender"
-            >
-              {isAuthenticated ? "My Account & Orders" : "Customer Sign In / Register"}
-            </Link>
-            <Link
-              href="/contact"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-xs uppercase tracking-wider font-semibold text-brand-secondary hover:text-brand-charcoal"
-            >
-              Concierge & Client Care
-            </Link>
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Quick Search */}
+            <form onSubmit={handleSearchSubmit} className="mx-5 mt-4 mb-2 flex items-center gap-2 bg-brand-light px-3.5 py-2.5 rounded-xl border border-brand-border flex-shrink-0">
+              <Search className="h-4 w-4 text-brand-secondary flex-shrink-0" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search pieces..."
+                className="w-full bg-transparent border-none text-xs text-brand-charcoal placeholder-brand-secondary focus:outline-none"
+              />
+            </form>
+
+            {/* Nav Links */}
+            <nav className="flex-1 px-5 py-2">
+              <div className="space-y-0.5 pb-5 border-b border-brand-border">
+                {[
+                  { href: '/shop', label: 'Shop All Collection' },
+                  { href: '/shop?audience=WOMEN', label: "Women's Wardrobe" },
+                  { href: '/shop?audience=MEN', label: "Men's Wardrobe" },
+                  { href: '/shop?audience=KIDS', label: 'Kids & Baby' },
+                  { href: '/shop?category=bags', label: 'Leather Goods & Bags' },
+                  { href: '/shop?on_sale=true', label: 'Seasonal Private Sale', accent: true },
+                ].map(({ href, label, accent }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block py-3 text-base font-serif border-b border-brand-border/40 last:border-0 transition-colors ${
+                      accent ? 'text-brand-lavenderDark font-medium' : 'text-brand-charcoal hover:text-brand-lavender'
+                    }`}
+                  >
+                    {label}
+                  </Link>
+                ))}
+                {/* Shoes 3D */}
+                <Link
+                  href="/shop?category=shoes"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between py-3 text-base font-serif text-brand-charcoal hover:text-brand-lavender border-b border-brand-border/40 transition-colors"
+                >
+                  <span>Shoes & Footwear</span>
+                  <span className="text-[10px] bg-brand-light px-2 py-0.5 rounded text-brand-lavenderDark font-sans font-semibold">3D</span>
+                </Link>
+              </div>
+
+              <div className="pt-5 space-y-3">
+                {isStoreAdmin && (
+                  <Link
+                    href="/admin/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2 p-3 bg-brand-charcoal text-white rounded-xl font-medium text-xs uppercase tracking-wider"
+                  >
+                    <Sparkles className="h-4 w-4 text-brand-lavender" />
+                    <span>Admin Studio</span>
+                  </Link>
+                )}
+                <Link
+                  href={isAuthenticated ? '/account' : '/auth/login'}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-xs uppercase tracking-wider font-semibold text-brand-charcoal hover:text-brand-lavender"
+                >
+                  {isAuthenticated ? 'My Account & Orders' : 'Sign In / Register'}
+                </Link>
+                <Link
+                  href="/contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-xs uppercase tracking-wider font-semibold text-brand-secondary hover:text-brand-charcoal"
+                >
+                  Concierge & Client Care
+                </Link>
+              </div>
+            </nav>
           </div>
-        </div>
+
+          <style>{`
+            @keyframes slideInLeft {
+              from { transform: translateX(-100%); opacity: 0; }
+              to   { transform: translateX(0);     opacity: 1; }
+            }
+          `}</style>
+        </>
       )}
     </header>
   );
