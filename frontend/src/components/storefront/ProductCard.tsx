@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingBag, Eye, Box, Check } from 'lucide-react';
 import { Product } from '@/lib/types';
-import { useCartStore } from '@/lib/cart-store';
+import { useCartStore, ProductMeta } from '@/lib/cart-store';
 import { resolveProductImage } from '@/lib/image-resolver';
 
 interface ProductCardProps {
@@ -27,11 +27,38 @@ export default function ProductCard({ product }: ProductCardProps) {
 
     // Find the first active in-stock variant
     const variant = product.variants?.find((v) => v.is_active && v.is_in_stock) || product.variants?.[0];
-    if (!variant) return;
+    if (!variant) {
+      // No variant — still add with product id as variantId
+      const meta: ProductMeta = {
+        name: product.name,
+        price: product.current_price || product.regular_price || '0',
+        image: primaryImage,
+      };
+      try {
+        setIsAdding(true);
+        await addItem(product.id, 1, meta);
+        setAdded(true);
+        setTimeout(() => setAdded(false), 2000);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsAdding(false);
+      }
+      return;
+    }
+
+    const meta: ProductMeta = {
+      name: product.name,
+      price: variant.price || product.current_price || product.regular_price || '0',
+      image: primaryImage,
+      size: variant.size || '',
+      color: variant.color || '',
+      sku: variant.sku || '',
+    };
 
     try {
       setIsAdding(true);
-      await addItem(variant.id, 1);
+      await addItem(variant.id, 1, meta);
       setAdded(true);
       setTimeout(() => setAdded(false), 2000);
     } catch (err) {
