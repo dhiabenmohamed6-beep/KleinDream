@@ -6,7 +6,7 @@ from .views import (
     AssetLibraryViewSet, AIJobHistoryListView, AISettingsStatusView
 )
 
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'assets', AssetLibraryViewSet, basename='ai-asset')
 
 urlpatterns = [

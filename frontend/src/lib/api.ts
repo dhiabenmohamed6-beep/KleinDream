@@ -1,6 +1,8 @@
 import { Product, Category, Cart, Order, User, AnnouncementBarData, HeroBannerData, StoreSettingsData, AIAsset, AIJob } from './types';
 
-export const API_BASE = '/api/v1';
+export const API_BASE = typeof window === 'undefined'
+  ? (process.env.INTERNAL_BACKEND_URL || 'http://127.0.0.1:8001/api/v1')
+  : '/api/v1';
 
 function getAuthHeader(): Record<string, string> {
   if (typeof window === 'undefined') return {};
@@ -119,8 +121,22 @@ export async function updateCartItem(itemId: number, quantity: number, guestToke
     headers,
     body: JSON.stringify({ quantity })
   });
-  if (!res.ok) throw new Error('Failed to update cart');
-  return res.json();
+  if (!res.ok) {
+    if (res.status === 404) {
+      return fetchCart(guestToken);
+    }
+    let errMsg = 'Failed to update cart';
+    try {
+      const err = await res.json();
+      errMsg = err.error || err.detail || errMsg;
+    } catch {}
+    throw new Error(errMsg);
+  }
+  const data = await res.json();
+  if (data.guest_token && typeof window !== 'undefined') {
+    localStorage.setItem('klein_guest_token', data.guest_token);
+  }
+  return data;
 }
 
 export async function removeCartItem(itemId: number, guestToken?: string): Promise<Cart> {
@@ -129,8 +145,17 @@ export async function removeCartItem(itemId: number, guestToken?: string): Promi
     method: 'DELETE',
     headers
   });
-  if (!res.ok) throw new Error('Failed to remove cart item');
-  return res.json();
+  if (!res.ok) {
+    if (res.status === 404) {
+      return fetchCart(guestToken);
+    }
+    throw new Error('Failed to remove cart item');
+  }
+  const data = await res.json();
+  if (data.guest_token && typeof window !== 'undefined') {
+    localStorage.setItem('klein_guest_token', data.guest_token);
+  }
+  return data;
 }
 
 // Promotions
@@ -330,7 +355,14 @@ export async function createAdminProduct(productData: any): Promise<Product> {
     headers,
     body: JSON.stringify(productData)
   });
-  if (!res.ok) throw new Error('Failed to create product');
+  if (!res.ok) {
+    let detail = 'Failed to create product';
+    try {
+      const err = await res.json();
+      detail = JSON.stringify(err);
+    } catch {}
+    throw new Error(detail);
+  }
   return res.json();
 }
 

@@ -132,8 +132,12 @@ export default function CartPage() {
 
                   <button
                     type="button"
-                    onClick={() => removeItem(item.id)}
-                    className="text-gray-400 hover:text-red-500 transition-colors p-1.5"
+                    disabled={isLoading}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeItem(item.id);
+                    }}
+                    className="text-gray-400 hover:text-red-500 disabled:opacity-40 transition-colors p-1.5"
                     title="Remove item"
                   >
                     <Trash2 className="h-4 w-4" />

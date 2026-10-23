@@ -72,7 +72,7 @@ export default function AdminProductsPage() {
         regular_price: Number(formData.regular_price),
         sale_price: formData.sale_price ? Number(formData.sale_price) : null,
         category_ids: formData.category_ids,
-        model_3d_url: formData.model_3d_url || null,
+        model_3d_url: formData.model_3d_url || '',
         is_featured: formData.is_featured,
         is_new: formData.is_new,
         is_bestseller: formData.is_bestseller,

@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useTransition } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Filter, SlidersHorizontal, X, ArrowUpDown, Box } from 'lucide-react';
+import { Filter, SlidersHorizontal, X, ArrowUpDown, Box, Loader2 } from 'lucide-react';
 import ProductCard from '@/components/storefront/ProductCard';
 import { fetchProducts, fetchCategories } from '@/lib/api';
 import { Product, Category } from '@/lib/types';
@@ -15,7 +15,10 @@ function ShopContent() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [filtering, setFiltering] = useState(false); // soft loading — keeps old products visible
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const isFirstLoad = useRef(true);
+  const abortRef = useRef<AbortController | null>(null);
 
   // Filters from query params
   const categoryParam = searchParams.get('category') || '';
@@ -25,14 +28,21 @@ function ShopContent() {
   const onSaleParam = searchParams.get('on_sale') === 'true';
   const inStockParam = searchParams.get('in_stock') === 'true';
 
+  // Load categories once
   useEffect(() => {
     fetchCategories().then((res) => {
       setCategories(res.results || []);
     }).catch(() => {});
   }, []);
 
+  // Load products on filter change
   useEffect(() => {
-    setLoading(true);
+    // Cancel any in-flight request
+    if (abortRef.current) {
+      abortRef.current.abort();
+    }
+    abortRef.current = new AbortController();
+
     const params: Record<string, any> = {};
     if (categoryParam) params.category = categoryParam;
     if (audienceParam) params.audience = audienceParam;
@@ -41,13 +51,29 @@ function ShopContent() {
     if (onSaleParam) params.on_sale = 'true';
     if (inStockParam) params.in_stock = 'true';
 
+    if (isFirstLoad.current) {
+      // First load: show full skeleton
+      setLoading(true);
+    } else {
+      // Subsequent filter changes: soft overlay — keep old products visible
+      setFiltering(true);
+    }
+
     fetchProducts(params)
       .then((res) => {
         setProducts(res.results || []);
         setTotalCount(res.count || 0);
       })
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
+      .catch((err) => {
+        if (err?.name !== 'AbortError') {
+          console.error(err);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+        setFiltering(false);
+        isFirstLoad.current = false;
+      });
   }, [categoryParam, audienceParam, searchParam, sortParam, onSaleParam, inStockParam]);
 
   const updateParam = (key: string, value: string | null) => {
@@ -86,8 +112,15 @@ function ShopContent() {
               ? 'Private Sale Collection'
               : 'The Complete Collection'}
           </h1>
-          <p className="text-xs text-brand-secondary mt-1">
-            Showing {totalCount} {totalCount === 1 ? 'curated piece' : 'curated pieces'}
+          <p className="text-xs text-brand-secondary mt-1 flex items-center gap-2">
+            {filtering ? (
+              <>
+                <Loader2 className="h-3 w-3 animate-spin text-brand-lavender" />
+                <span>Updating collection…</span>
+              </>
+            ) : (
+              <span>Showing {totalCount} {totalCount === 1 ? 'curated piece' : 'curated pieces'}</span>
+            )}
           </p>
         </div>
 
@@ -356,6 +389,7 @@ function ShopContent() {
         {/* Product Grid Area (2-column on mobile, 3-column on desktop) */}
         <div className="md:col-span-3">
           {loading ? (
+            // Full skeleton on first load only
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div key={i} className="animate-pulse flex flex-col space-y-3">
@@ -365,7 +399,7 @@ function ShopContent() {
                 </div>
               ))}
             </div>
-          ) : products.length === 0 ? (
+          ) : products.length === 0 && !filtering ? (
             <div className="text-center py-16 sm:py-20 px-4 space-y-4 bg-brand-light rounded-2xl border border-brand-border">
               <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center mx-auto text-brand-secondary shadow-subtle">
                 <Box className="h-6 w-6 stroke-[1.5]" />
@@ -383,10 +417,21 @@ function ShopContent() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+            // Wrap products in a relative container to show a subtle overlay while filtering
+            <div className={`relative transition-opacity duration-200 ${filtering ? 'opacity-60' : 'opacity-100'}`}>
+              {filtering && (
+                <div className="absolute inset-0 z-10 flex items-start justify-center pt-16 pointer-events-none">
+                  <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2.5 rounded-full shadow-card border border-brand-border text-xs font-medium text-brand-charcoal">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-brand-lavender" />
+                    <span>Loading collection…</span>
+                  </div>
+                </div>
+              )}
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
             </div>
           )}
         </div>

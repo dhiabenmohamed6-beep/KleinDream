@@ -6,7 +6,7 @@ from .views import (
     AdminCustomerListView, AdminStaffListView
 )
 
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'addresses', AddressViewSet, basename='address')
 
 urlpatterns = [

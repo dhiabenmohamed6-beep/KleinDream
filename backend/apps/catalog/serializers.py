@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Category, Product, ProductVariant, ProductImage, Collection, Review
 from apps.accounts.serializers import UserSerializer
 
+
 class SubCategorySerializer(serializers.ModelSerializer):
     product_count = serializers.SerializerMethodField()
 
@@ -14,7 +15,10 @@ class SubCategorySerializer(serializers.ModelSerializer):
         ]
 
     def get_product_count(self, obj):
+        if hasattr(obj, '_product_count'):
+            return obj._product_count
         return obj.products.filter(is_active=True).count()
+
 
 class CategorySerializer(serializers.ModelSerializer):
     subcategories = SubCategorySerializer(many=True, read_only=True)
@@ -30,7 +34,11 @@ class CategorySerializer(serializers.ModelSerializer):
         ]
 
     def get_product_count(self, obj):
+        # Use DB-annotated value if available (set by CategoryViewSet), else fallback
+        if hasattr(obj, '_product_count'):
+            return obj._product_count
         return obj.products.filter(is_active=True).count()
+
 
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,6 +47,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
             'id', 'image', 'image_url', 'alt_text', 'display_order',
             'is_primary', 'is_ai_generated', 'created_at'
         ]
+
 
 class ProductVariantSerializer(serializers.ModelSerializer):
     price = serializers.ReadOnlyField()
@@ -51,6 +60,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
             'sku', 'price_override', 'price', 'stock_quantity',
             'low_stock_threshold', 'is_active', 'is_in_stock'
         ]
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
@@ -65,6 +75,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def get_user_name(self, obj):
         return f"{obj.user.first_name} {obj.user.last_name}".strip() or obj.user.username
+
 
 class ProductListSerializer(serializers.ModelSerializer):
     categories = SubCategorySerializer(many=True, read_only=True)
@@ -87,15 +98,24 @@ class ProductListSerializer(serializers.ModelSerializer):
         ]
 
     def get_primary_image(self, obj):
-        img = obj.images.filter(is_primary=True).first() or obj.images.first()
-        if img:
-            return ProductImageSerializer(img).data
+        # Use prefetched images_cache if available (set by ProductViewSet)
+        images = getattr(obj, 'images_cache', None)
+        if images is not None:
+            primary = next((img for img in images if img.is_primary), None) or (images[0] if images else None)
+        else:
+            primary = obj.images.filter(is_primary=True).first() or obj.images.first()
+        if primary:
+            return ProductImageSerializer(primary).data
         return None
 
     def get_available_colors(self, obj):
         colors = []
         seen = set()
-        for variant in obj.variants.filter(is_active=True):
+        # Use prefetched active_variants_cache if available (set by ProductViewSet)
+        variants = getattr(obj, 'active_variants_cache', None)
+        if variants is None:
+            variants = obj.variants.filter(is_active=True)
+        for variant in variants:
             if variant.color_hex and variant.color_hex not in seen:
                 seen.add(variant.color_hex)
                 colors.append({
@@ -107,11 +127,16 @@ class ProductListSerializer(serializers.ModelSerializer):
     def get_available_sizes(self, obj):
         sizes = []
         seen = set()
-        for variant in obj.variants.filter(is_active=True):
+        # Use prefetched active_variants_cache if available (set by ProductViewSet)
+        variants = getattr(obj, 'active_variants_cache', None)
+        if variants is None:
+            variants = obj.variants.filter(is_active=True)
+        for variant in variants:
             if variant.size and variant.size not in seen:
                 seen.add(variant.size)
                 sizes.append(variant.size)
         return sizes
+
 
 class ProductDetailSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True, read_only=True)
@@ -143,6 +168,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         if reviews.exists():
             return round(sum(r.rating for r in reviews) / reviews.count(), 1)
         return 5.0
+
 
 class CollectionSerializer(serializers.ModelSerializer):
     products = ProductListSerializer(many=True, read_only=True)

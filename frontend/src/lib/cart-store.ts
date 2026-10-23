@@ -48,24 +48,55 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 
   updateQuantity: async (itemId: number, quantity: number) => {
+    if (quantity <= 0) {
+      return get().removeItem(itemId);
+    }
+    const prevCart = get().cart;
     try {
       set({ isLoading: true, error: null });
       const updatedCart = await apiUpdateCartItem(itemId, quantity);
       set({ cart: updatedCart, isLoading: false });
     } catch (err: any) {
-      set({ error: err.message, isLoading: false });
-      throw err;
+      console.error('Failed to update cart item:', err);
+      try {
+        const freshCart = await fetchCart();
+        set({ cart: freshCart, isLoading: false });
+      } catch {
+        set({ cart: prevCart, error: err.message, isLoading: false });
+      }
     }
   },
 
   removeItem: async (itemId: number) => {
+    const prevCart = get().cart;
+    // Optimistic removal: immediate visual update for instant responsiveness
+    if (prevCart && prevCart.items) {
+      const remainingItems = prevCart.items.filter((item) => item.id !== itemId);
+      const subtotal = remainingItems.reduce((acc, it) => acc + (Number(it.line_total) || 0), 0);
+      const total_items = remainingItems.reduce((acc, it) => acc + (Number(it.quantity) || 0), 0);
+      set({
+        cart: {
+          ...prevCart,
+          items: remainingItems,
+          subtotal: subtotal.toFixed(2),
+          total_items
+        }
+      });
+    }
+
     try {
       set({ isLoading: true, error: null });
       const updatedCart = await apiRemoveCartItem(itemId);
       set({ cart: updatedCart, isLoading: false });
     } catch (err: any) {
-      set({ error: err.message, isLoading: false });
-      throw err;
+      console.error('Failed to remove cart item:', err);
+      // Re-sync with server state to ensure UI matches reality
+      try {
+        const freshCart = await fetchCart();
+        set({ cart: freshCart, isLoading: false });
+      } catch {
+        set({ cart: prevCart, error: err.message, isLoading: false });
+      }
     }
   },
 }));

@@ -10,7 +10,9 @@ def get_or_create_cart(request):
     token = request.headers.get('X-Guest-Token', '') or request.query_params.get('guest_token', '')
     
     if request.user.is_authenticated:
-        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart is None:
+            cart = Cart.objects.create(user=request.user)
         # If there is also a guest cart with items, merge it!
         if token:
             try:
@@ -31,7 +33,9 @@ def get_or_create_cart(request):
     # Guest user
     if not token:
         token = str(uuid.uuid4())
-    cart, created = Cart.objects.get_or_create(guest_token=token, user__isnull=True)
+    cart = Cart.objects.filter(guest_token=token, user__isnull=True).first()
+    if cart is None:
+        cart = Cart.objects.create(guest_token=token, user=None)
     return cart, token
 
 class CartView(views.APIView):
@@ -83,16 +87,25 @@ class CartView(views.APIView):
         return Response(res_data, status=status.HTTP_200_OK)
 
     def delete(self, request):
-        cart, _ = get_or_create_cart(request)
+        cart, token = get_or_create_cart(request)
         cart.items.all().delete()
-        return Response({"message": "Cart cleared successfully."})
+        res_data = CartSerializer(cart).data
+        if token:
+            res_data['guest_token'] = token
+        return Response(res_data, status=status.HTTP_200_OK)
 
 class CartItemDetailView(views.APIView):
     permission_classes = [permissions.AllowAny]
 
     def patch(self, request, item_id):
-        cart, _ = get_or_create_cart(request)
-        item = get_object_or_404(CartItem, id=item_id, cart=cart)
+        cart, token = get_or_create_cart(request)
+        item = CartItem.objects.filter(id=item_id, cart=cart).first()
+        if not item:
+            res_data = CartSerializer(cart).data
+            if token:
+                res_data['guest_token'] = token
+            return Response(res_data, status=status.HTTP_200_OK)
+
         quantity = int(request.data.get('quantity', 1))
 
         if quantity <= 0:
@@ -106,10 +119,16 @@ class CartItemDetailView(views.APIView):
             item.quantity = quantity
             item.save()
 
-        return Response(CartSerializer(cart).data)
+        res_data = CartSerializer(cart).data
+        if token:
+            res_data['guest_token'] = token
+        return Response(res_data, status=status.HTTP_200_OK)
 
     def delete(self, request, item_id):
-        cart, _ = get_or_create_cart(request)
-        item = get_object_or_404(CartItem, id=item_id, cart=cart)
-        item.delete()
-        return Response(CartSerializer(cart).data)
+        cart, token = get_or_create_cart(request)
+        CartItem.objects.filter(id=item_id, cart=cart).delete()
+        res_data = CartSerializer(cart).data
+        if token:
+            res_data['guest_token'] = token
+        return Response(res_data, status=status.HTTP_200_OK)
+

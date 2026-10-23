@@ -107,8 +107,12 @@ export default function CartDrawer() {
                         </Link>
                         <button
                           type="button"
-                          onClick={() => removeItem(item.id)}
-                          className="text-gray-400 hover:text-red-500 transition-colors p-1 flex-shrink-0"
+                          disabled={isLoading}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeItem(item.id);
+                          }}
+                          className="text-gray-400 hover:text-red-500 disabled:opacity-40 transition-colors p-1 flex-shrink-0"
                           title="Remove item"
                         >
                           <Trash2 className="h-3.5 w-3.5" />

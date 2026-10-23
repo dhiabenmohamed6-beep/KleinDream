@@ -5,7 +5,7 @@ from .views import (
     AdminContactMessageViewSet, AdminNewsletterListView
 )
 
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'admin/messages', AdminContactMessageViewSet, basename='admin-contact-messages')
 
 urlpatterns = [

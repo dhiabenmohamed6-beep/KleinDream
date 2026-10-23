@@ -2,7 +2,9 @@ from rest_framework import generics, viewsets, permissions, filters, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db import models, transaction
-from django.db.models import Q, Min, Max, Count
+from django.db.models import Q, Min, Max, Count, Prefetch, Sum
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from .models import Category, Product, ProductVariant, ProductImage, Collection, Review
 from .serializers import (
     CategorySerializer, ProductListSerializer, ProductDetailSerializer,
@@ -15,8 +17,14 @@ class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
     serializer_class = CategorySerializer
 
+    @method_decorator(cache_page(60))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     def get_queryset(self):
-        queryset = Category.objects.all()
+        queryset = Category.objects.all().annotate(
+            _product_count=Count('products', filter=Q(products__is_active=True), distinct=True)
+        )
         # If not staff, only show active categories
         if not (self.request.user and self.request.user.is_authenticated and self.request.user.is_staff_member):
             queryset = queryset.filter(is_active=True)
@@ -42,8 +50,27 @@ class ProductViewSet(viewsets.ModelViewSet):
             return ProductListSerializer
         return ProductDetailSerializer
 
+    @method_decorator(cache_page(60))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     def get_queryset(self):
-        queryset = Product.objects.all().prefetch_related('images', 'variants', 'categories')
+        # Use optimized prefetch_related to avoid N+1 on images and variants
+        active_variants_prefetch = Prefetch(
+            'variants',
+            queryset=ProductVariant.objects.filter(is_active=True),
+            to_attr='active_variants_cache'
+        )
+        primary_image_prefetch = Prefetch(
+            'images',
+            queryset=ProductImage.objects.order_by('-is_primary', 'display_order'),
+            to_attr='images_cache'
+        )
+        queryset = Product.objects.all().prefetch_related(
+            active_variants_prefetch,
+            primary_image_prefetch,
+            'categories',
+        )
         
         # Public filtering: only active products
         if not (self.request.user and self.request.user.is_authenticated and self.request.user.is_staff_member):

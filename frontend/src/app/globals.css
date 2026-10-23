@@ -81,3 +81,30 @@ img, video, canvas {
 * {
   -webkit-tap-highlight-color: transparent;
 }
+
+/* Infinite running ticker marquee */
+@keyframes marquee-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 24s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.vertical-lr {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+}
+

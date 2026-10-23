@@ -41,11 +41,15 @@ export default function LoginPage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email.trim(), password }),
           });
-          res = attempt;
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('klein_api_base', baseUrl);
-          }
-          break;
+           res = attempt;
+           if (attempt.status === 404) {
+             // Not a backend on this URL, try next candidate
+             continue;
+           }
+           if (typeof window !== 'undefined') {
+             localStorage.setItem('klein_api_base', baseUrl);
+           }
+           break;
         } catch {
           // Try next candidate URL
         }

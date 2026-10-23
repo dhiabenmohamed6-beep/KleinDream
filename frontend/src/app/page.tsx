@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { ArrowRight, Box, ShieldCheck, Sparkles, RefreshCw, Truck } from 'lucide-react';
 import HeroSection from '@/components/storefront/HeroSection';
 import ProductCard from '@/components/storefront/ProductCard';
+import EditorialShowcase from '@/components/storefront/EditorialShowcase';
 import { fetchProducts, fetchCategories, fetchHeroBanners } from '@/lib/api';
 import { Product, Category, HeroBannerData } from '@/lib/types';
 
@@ -12,30 +13,24 @@ export const revalidate = 0; // Fresh dynamic rendering
 export default async function HomePage() {
   let heroBanners: HeroBannerData[] = [];
   let categories: Category[] = [];
-  let newArrivals: Product[] = [];
-  let bestsellers: Product[] = [];
+  let allProducts: Product[] = [];
 
-  try {
-    const banners = await fetchHeroBanners();
-    if (banners && banners.length > 0) {
-      heroBanners = banners;
-    }
-  } catch {}
+  // Fetch all data in parallel for instantaneous page load
+  const [bannersResult, catResult, productsResult] = await Promise.allSettled([
+    fetchHeroBanners(),
+    fetchCategories(),
+    fetchProducts({ page_size: 24 }),
+  ]);
 
-  try {
-    const catRes = await fetchCategories();
-    categories = catRes.results || [];
-  } catch {}
-
-  try {
-    const newRes = await fetchProducts({ is_new: 'true' });
-    newArrivals = newRes.results?.slice(0, 4) || [];
-  } catch {}
-
-  try {
-    const bestRes = await fetchProducts({ is_bestseller: 'true' });
-    bestsellers = bestRes.results?.slice(0, 4) || [];
-  } catch {}
+  if (bannersResult.status === 'fulfilled' && bannersResult.value?.length > 0) {
+    heroBanners = bannersResult.value;
+  }
+  if (catResult.status === 'fulfilled') {
+    categories = catResult.value.results || [];
+  }
+  if (productsResult.status === 'fulfilled') {
+    allProducts = productsResult.value.results || [];
+  }
 
   return (
     <div className="space-y-12 sm:space-y-20 pb-12 sm:pb-20">
@@ -84,103 +79,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 3. New Arrivals Section */}
-      {newArrivals.length > 0 && (
-        <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-6 sm:mb-8 pb-3 sm:pb-4 border-b border-brand-border">
-            <div>
-              <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-brand-lavender font-semibold block mb-0.5 sm:mb-1">
-                Fresh From the Atelier
-              </span>
-              <h2 className="font-serif text-xl sm:text-2xl md:text-3xl text-brand-charcoal font-normal">
-                New Arrivals
-              </h2>
-            </div>
-            <Link
-              href="/shop?is_new=true"
-              className="group inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-brand-charcoal hover:text-brand-lavender transition-colors"
-            >
-              <span>View All</span>
-              <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
+      {/* 3. The Editorial Showcase: Bestseller Architectural Grid, Tickers, Live Catalog & Custom What Is It */}
+      <EditorialShowcase products={allProducts} categories={categories} />
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-            {newArrivals.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 4. Atelier 3D Feature Spotlight Banner */}
-      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="relative rounded-2xl overflow-hidden bg-brand-charcoal text-white grid grid-cols-1 lg:grid-cols-2 items-center">
-          
-          <div className="p-6 sm:p-12 lg:p-16 space-y-4 sm:space-y-6 z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-lavender/20 border border-brand-lavender/40 text-[10px] sm:text-xs font-medium text-brand-lavender tracking-wider uppercase">
-              <Box className="h-3.5 w-3.5" />
-              <span>Interactive 3D Virtual Studio</span>
-            </div>
-            <h2 className="font-serif text-2xl sm:text-4xl md:text-5xl font-normal leading-tight">
-              Experience Handcrafted Footwear in Real 3D
-            </h2>
-            <p className="text-xs sm:text-sm md:text-base text-gray-300 font-light leading-relaxed max-w-lg">
-              Rotate, inspect texture fidelity, and zoom in on every stitch before you purchase. Our signature leather sneakers are generated through compatible 3D neural reconstruction.
-            </p>
-            <div className="pt-2">
-              <Link
-                href="/shop?category=shoes"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-brand-lavender hover:bg-brand-lavenderDark text-white text-xs font-semibold uppercase tracking-wider rounded-xl transition-colors shadow-float"
-              >
-                <span>Explore 3D Models</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-
-          <div className="relative h-64 sm:h-96 lg:h-full min-h-[260px] sm:min-h-[380px] w-full overflow-hidden bg-brand-charcoal/80">
-            <Image
-              src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop"
-              alt="KleinDream 3D Footwear"
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover object-center opacity-85 hover:scale-105 transition-transform duration-700"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal via-transparent to-transparent lg:block hidden" />
-          </div>
-
-        </div>
-      </section>
-
-      {/* 5. Bestsellers Collection */}
-      {bestsellers.length > 0 && (
-        <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-6 sm:mb-8 pb-3 sm:pb-4 border-b border-brand-border">
-            <div>
-              <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-brand-lavender font-semibold block mb-0.5 sm:mb-1">
-                Client Favorites
-              </span>
-              <h2 className="font-serif text-xl sm:text-2xl md:text-3xl text-brand-charcoal font-normal">
-                Bestselling Essentials
-              </h2>
-            </div>
-            <Link
-              href="/shop?sort=bestseller"
-              className="group inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-brand-charcoal hover:text-brand-lavender transition-colors"
-            >
-              <span>View All</span>
-              <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-            {bestsellers.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* 6. Customer Trust Badges */}
       <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6">
