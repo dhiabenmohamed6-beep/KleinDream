@@ -2,37 +2,80 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { createHmac, pbkdf2Sync } from 'crypto';
 
 const DATABASE_URL = process.env.DATABASE_URL ||
   'postgresql://neondb_owner:npg_Tj3yVxn2gEko@ep-twilight-grass-b4cebi66-pooler.c-6.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
 
-const JWT_SECRET = process.env.JWT_SECRET || process.env.DJANGO_SECRET_KEY ||
+const JWT_SECRET = process.env.JWT_SECRET ||
   'kleindream-luxury-atelier-secret-key-2026-prod';
 
 let pool: Pool | null = null;
 function getPool() {
   if (!pool) {
-    pool = new Pool({ connectionString: DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    pool = new Pool({
+      connectionString: DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+    });
   }
   return pool;
 }
 
+/**
+ * Verify a Django-stored PBKDF2 password hash.
+ * Format: pbkdf2_sha256$<iterations>$<salt>$<b64hash>
+ */
+function verifyDjangoPassword(rawPassword: string, storedHash: string): boolean {
+  try {
+    if (storedHash.startsWith('pbkdf2_sha256$')) {
+      // Split on '$' but only the first 3 delimiters to handle any edge cases
+      const firstDollar = storedHash.indexOf('$');
+      const rest = storedHash.slice(firstDollar + 1); // "iterations$salt$hash"
+      const secondDollar = rest.indexOf('$');
+      const thirdPart = rest.slice(secondDollar + 1); // "salt$hash"
+      const thirdDollar = thirdPart.indexOf('$');
+
+      const iterations = parseInt(rest.slice(0, secondDollar), 10);
+      const salt = thirdPart.slice(0, thirdDollar);
+      const storedB64 = thirdPart.slice(thirdDollar + 1);
+
+      if (isNaN(iterations) || !salt || !storedB64) return false;
+
+      // Django uses PBKDF2-HMAC-SHA256 with dklen=32
+      const derived = pbkdf2Sync(rawPassword, salt, iterations, 32, 'sha256');
+      const computedB64 = derived.toString('base64');
+
+      // Constant-time comparison
+      if (computedB64.length !== storedB64.length) return false;
+      let diff = 0;
+      for (let i = 0; i < computedB64.length; i++) {
+        diff |= computedB64.charCodeAt(i) ^ storedB64.charCodeAt(i);
+      }
+      return diff === 0;
+    }
+
+    if (storedHash.startsWith('$2b$') || storedHash.startsWith('$2a$') || storedHash.startsWith('$2y$')) {
+      return bcrypt.compareSync(rawPassword, storedHash);
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const identifier = (body.email || body.username || '').trim().toLowerCase();
-    const password = (body.password || '').trim();
+    const body = await req.json().catch(() => ({}));
+    const identifier = ((body.email || body.username || '') as string).trim().toLowerCase();
+    const password = ((body.password || '') as string);
 
     if (!identifier || !password) {
-      return NextResponse.json(
-        { detail: 'Email and password are required.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ detail: 'Email and password are required.' }, { status: 400 });
     }
 
     const db = getPool();
 
-    // Fetch user by email or username (case-insensitive)
     const { rows } = await db.query(
       `SELECT id, email, username, first_name, last_name, password,
               role, phone, is_active, is_staff, is_superuser,
@@ -46,47 +89,13 @@ export async function POST(req: NextRequest) {
     const user = rows[0];
 
     if (!user) {
-      return NextResponse.json(
-        { detail: 'Invalid email or password.' },
-        { status: 401 }
-      );
+      return NextResponse.json({ detail: 'Invalid email or password.' }, { status: 401 });
     }
 
-    // Django uses PBKDF2 passwords: "pbkdf2_sha256$iterations$salt$hash"
-    // bcryptjs won't work for Django PBKDF2 — use a direct comparison approach
-    let passwordValid = false;
-
-    const storedHash = user.password as string;
-
-    if (storedHash.startsWith('pbkdf2_sha256$')) {
-      // Verify Django PBKDF2 password
-      const parts = storedHash.split('$');
-      if (parts.length >= 4) {
-        const iterations = parseInt(parts[1], 10);
-        const salt = parts[2];
-        const hash = parts[3];
-
-        const crypto = await import('crypto');
-        const derivedKey = crypto.pbkdf2Sync(
-          password,
-          salt,
-          iterations,
-          32,  // Django uses 32 bytes = 256 bits
-          'sha256'
-        );
-        const expectedHash = derivedKey.toString('base64');
-        passwordValid = expectedHash === hash;
-      }
-    } else if (storedHash.startsWith('$2b$') || storedHash.startsWith('$2a$')) {
-      // bcrypt hash
-      passwordValid = await bcrypt.compare(password, storedHash);
-    }
+    const passwordValid = verifyDjangoPassword(password, user.password as string);
 
     if (!passwordValid) {
-      return NextResponse.json(
-        { detail: 'Invalid email or password.' },
-        { status: 401 }
-      );
+      return NextResponse.json({ detail: 'Invalid email or password.' }, { status: 401 });
     }
 
     if (!user.is_active) {
@@ -96,13 +105,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Build user payload
     const userPayload = {
       id: user.id,
       email: user.email,
       username: user.username,
-      first_name: user.first_name,
-      last_name: user.last_name,
+      first_name: user.first_name || '',
+      last_name: user.last_name || '',
       role: user.role,
       phone: user.phone || '',
       is_store_admin: user.role === 'ADMIN' || user.is_superuser,
@@ -111,11 +119,10 @@ export async function POST(req: NextRequest) {
       created_at: user.created_at,
     };
 
-    // Sign JWT tokens
     const access = jwt.sign(
       { user_id: user.id, email: user.email, role: user.role },
       JWT_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '24h' }
     );
     const refresh = jwt.sign(
       { user_id: user.id, type: 'refresh' },
@@ -127,7 +134,7 @@ export async function POST(req: NextRequest) {
   } catch (err: any) {
     console.error('[login] Error:', err?.message || err);
     return NextResponse.json(
-      { detail: 'Login service temporarily unavailable. Please try again.' },
+      { detail: 'Login service error. Please try again.' },
       { status: 503 }
     );
   }
