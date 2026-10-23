@@ -80,7 +80,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kleindream.wsgi.application'
 
-DATABASE_URL = os.getenv('DATABASE_URL', '').strip()
+DEFAULT_DB_URL = 'postgresql://neondb_owner:npg_Tj3yVxn2gEko@ep-twilight-grass-b4cebi66-pooler.c-6.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+DATABASE_URL = (os.getenv('DATABASE_URL') or DEFAULT_DB_URL).strip()
 if DATABASE_URL:
     database_url = urlsplit(DATABASE_URL)
     if database_url.scheme not in ('postgres', 'postgresql') or not database_url.hostname or not database_url.path.strip('/'):

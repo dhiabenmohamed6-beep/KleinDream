@@ -1,0 +1,1141 @@
+{
+  "products": [
+    {
+      "id": 9,
+      "name": "T-Shirt",
+      "slug": "t-shirt",
+      "sku": "KD-33635",
+      "short_description": "Best Best",
+      "categories": [
+        {
+          "id": 2,
+          "name": "Men",
+          "slug": "men",
+          "description": "Modern menswear, structured tailoring, leather goods, and refined casualwear.",
+          "image": null,
+          "image_url": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000&auto=format&fit=crop",
+          "audience": "MEN",
+          "display_order": 2,
+          "is_active": true,
+          "is_featured": true,
+          "product_count": 3
+        }
+      ],
+      "audience": "MEN",
+      "regular_price": "100.00",
+      "sale_price": "100.00",
+      "current_price": 100.0,
+      "discount_percent": 0,
+      "is_active": true,
+      "is_featured": false,
+      "is_bestseller": false,
+      "is_new": true,
+      "total_stock": 20,
+      "primary_image": {
+        "id": 14,
+        "image": "/media/products/images/e7f93c52-857e-4ea2-ba55-795fa75462d3.jpg",
+        "image_url": "",
+        "alt_text": "e7f93c52-857e-4ea2-ba55-795fa75462d3.jpg",
+        "display_order": 0,
+        "is_primary": true,
+        "is_ai_generated": false,
+        "created_at": "2026-10-22T10:30:33.719187Z"
+      },
+      "model_3d": null,
+      "model_3d_url": "",
+      "variants": [
+        {
+          "id": 25,
+          "product": 9,
+          "name": "XL / Washed gray",
+          "size": "XL",
+          "color_name": "Washed gray",
+          "color_hex": "#606062",
+          "sku": "KD-33635-XL",
+          "price_override": null,
+          "price": 100.0,
+          "stock_quantity": 20,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        }
+      ],
+      "available_colors": [
+        {
+          "name": "Washed gray",
+          "hex": "#606062"
+        }
+      ],
+      "available_sizes": [
+        "XL"
+      ],
+      "created_at": "2026-10-22T10:30:22.289062Z"
+    },
+    {
+      "id": 8,
+      "name": "TestProd",
+      "slug": "testprod",
+      "sku": "TP-1",
+      "short_description": "",
+      "categories": [
+        {
+          "id": 11,
+          "name": "TestCat",
+          "slug": "testcat",
+          "description": "",
+          "image": null,
+          "image_url": "",
+          "audience": "ALL",
+          "display_order": 0,
+          "is_active": true,
+          "is_featured": false,
+          "product_count": 1
+        }
+      ],
+      "audience": "WOMEN",
+      "regular_price": "100.00",
+      "sale_price": null,
+      "current_price": 100.0,
+      "discount_percent": 0,
+      "is_active": true,
+      "is_featured": false,
+      "is_bestseller": false,
+      "is_new": true,
+      "total_stock": 0,
+      "primary_image": null,
+      "model_3d": null,
+      "model_3d_url": "",
+      "variants": [],
+      "available_colors": [],
+      "available_sizes": [],
+      "created_at": "2026-10-22T10:11:46.120919Z"
+    },
+    {
+      "id": 7,
+      "name": "Chronograph Horizon Ceramic Watch",
+      "slug": "chronograph-horizon-watch",
+      "sku": "KD-AC-007",
+      "short_description": "Minimalist ceramic timepiece with sapphire crystal face and Swiss movement.",
+      "categories": [
+        {
+          "id": 6,
+          "name": "Accessories",
+          "slug": "accessories",
+          "description": "Sculptural jewelry, silk scarves, minimal watches, and handcrafted eyewear.",
+          "image": null,
+          "image_url": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
+          "audience": "ALL",
+          "display_order": 6,
+          "is_active": true,
+          "is_featured": true,
+          "product_count": 1
+        }
+      ],
+      "audience": "ALL",
+      "regular_price": "340.00",
+      "sale_price": "290.00",
+      "current_price": 290.0,
+      "discount_percent": 14,
+      "is_active": true,
+      "is_featured": true,
+      "is_bestseller": true,
+      "is_new": true,
+      "total_stock": 25,
+      "primary_image": {
+        "id": 12,
+        "image": null,
+        "image_url": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop",
+        "alt_text": "Chronograph Horizon Ceramic Watch view 1",
+        "display_order": 0,
+        "is_primary": true,
+        "is_ai_generated": false,
+        "created_at": "2026-10-18T13:22:03.750016Z"
+      },
+      "model_3d": null,
+      "model_3d_url": "",
+      "variants": [
+        {
+          "id": 24,
+          "product": 7,
+          "name": "36mm / Ivory Ceramic",
+          "size": "36mm",
+          "color_name": "Ivory Ceramic",
+          "color_hex": "#F4F4F6",
+          "sku": "KD-AC-007-36-WHT",
+          "price_override": null,
+          "price": 290.0,
+          "stock_quantity": 10,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 23,
+          "product": 7,
+          "name": "40mm / Obsidian Ceramic",
+          "size": "40mm",
+          "color_name": "Obsidian Ceramic",
+          "color_hex": "#202124",
+          "sku": "KD-AC-007-40-BLK",
+          "price_override": null,
+          "price": 290.0,
+          "stock_quantity": 15,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        }
+      ],
+      "available_colors": [
+        {
+          "name": "Ivory Ceramic",
+          "hex": "#F4F4F6"
+        },
+        {
+          "name": "Obsidian Ceramic",
+          "hex": "#202124"
+        }
+      ],
+      "available_sizes": [
+        "36mm",
+        "40mm"
+      ],
+      "created_at": "2026-10-18T13:22:02.600137Z"
+    },
+    {
+      "id": 6,
+      "name": "Little Maison Organic Cotton Set",
+      "slug": "little-maison-organic-set",
+      "sku": "KD-KD-006",
+      "short_description": "Two-piece organic ribbed cotton sweater and jogger set.",
+      "categories": [
+        {
+          "id": 3,
+          "name": "Kids",
+          "slug": "kids",
+          "description": "Premium, comfortable, and vibrant clothing designed for playful elegance.",
+          "image": null,
+          "image_url": "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=1000&auto=format&fit=crop",
+          "audience": "KIDS",
+          "display_order": 3,
+          "is_active": true,
+          "is_featured": true,
+          "product_count": 1
+        }
+      ],
+      "audience": "KIDS",
+      "regular_price": "95.00",
+      "sale_price": null,
+      "current_price": 95.0,
+      "discount_percent": 0,
+      "is_active": true,
+      "is_featured": true,
+      "is_bestseller": false,
+      "is_new": true,
+      "total_stock": 26,
+      "primary_image": {
+        "id": 11,
+        "image": null,
+        "image_url": "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=1200&auto=format&fit=crop",
+        "alt_text": "Little Maison Organic Cotton Set view 1",
+        "display_order": 0,
+        "is_primary": true,
+        "is_ai_generated": false,
+        "created_at": "2026-10-18T13:22:01.365904Z"
+      },
+      "model_3d": null,
+      "model_3d_url": "",
+      "variants": [
+        {
+          "id": 20,
+          "product": 6,
+          "name": "4Y / Oatmeal Heather",
+          "size": "4Y",
+          "color_name": "Oatmeal Heather",
+          "color_hex": "#E5E7EB",
+          "sku": "KD-KD-006-4Y-OAT",
+          "price_override": null,
+          "price": 95.0,
+          "stock_quantity": 8,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 21,
+          "product": 6,
+          "name": "6Y / Oatmeal Heather",
+          "size": "6Y",
+          "color_name": "Oatmeal Heather",
+          "color_hex": "#E5E7EB",
+          "sku": "KD-KD-006-6Y-OAT",
+          "price_override": null,
+          "price": 95.0,
+          "stock_quantity": 12,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 22,
+          "product": 6,
+          "name": "8Y / Oatmeal Heather",
+          "size": "8Y",
+          "color_name": "Oatmeal Heather",
+          "color_hex": "#E5E7EB",
+          "sku": "KD-KD-006-8Y-OAT",
+          "price_override": null,
+          "price": 95.0,
+          "stock_quantity": 6,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        }
+      ],
+      "available_colors": [
+        {
+          "name": "Oatmeal Heather",
+          "hex": "#E5E7EB"
+        }
+      ],
+      "available_sizes": [
+        "4Y",
+        "6Y",
+        "8Y"
+      ],
+      "created_at": "2026-10-18T13:22:00.472138Z"
+    },
+    {
+      "id": 5,
+      "name": "Fluid Silk Evening Slip Dress",
+      "slug": "fluid-silk-evening-dress",
+      "sku": "KD-DR-005",
+      "short_description": "Floor-length bias-cut mulberry silk dress with delicate straps.",
+      "categories": [
+        {
+          "id": 7,
+          "name": "Dresses",
+          "slug": "dresses",
+          "description": "",
+          "image": null,
+          "image_url": "",
+          "audience": "WOMEN",
+          "display_order": 1,
+          "is_active": true,
+          "is_featured": false,
+          "product_count": 1
+        },
+        {
+          "id": 1,
+          "name": "Women",
+          "slug": "women",
+          "description": "Contemporary womenswear, tailored coats, refined dresses, and signature essentials.",
+          "image": null,
+          "image_url": "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
+          "audience": "WOMEN",
+          "display_order": 1,
+          "is_active": true,
+          "is_featured": true,
+          "product_count": 3
+        }
+      ],
+      "audience": "WOMEN",
+      "regular_price": "260.00",
+      "sale_price": "220.00",
+      "current_price": 220.0,
+      "discount_percent": 15,
+      "is_active": true,
+      "is_featured": true,
+      "is_bestseller": true,
+      "is_new": true,
+      "total_stock": 36,
+      "primary_image": {
+        "id": 9,
+        "image": null,
+        "image_url": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=1200&auto=format&fit=crop",
+        "alt_text": "Fluid Silk Evening Slip Dress view 1",
+        "display_order": 0,
+        "is_primary": true,
+        "is_ai_generated": false,
+        "created_at": "2026-10-18T13:21:58.232789Z"
+      },
+      "model_3d": null,
+      "model_3d_url": "",
+      "variants": [
+        {
+          "id": 19,
+          "product": 5,
+          "name": "M / Deep Noir",
+          "size": "M",
+          "color_name": "Deep Noir",
+          "color_hex": "#202124",
+          "sku": "KD-DR-005-M-BLK",
+          "price_override": null,
+          "price": 220.0,
+          "stock_quantity": 10,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 17,
+          "product": 5,
+          "name": "M / Lavender Mist",
+          "size": "M",
+          "color_name": "Lavender Mist",
+          "color_hex": "#8975D9",
+          "sku": "KD-DR-005-M-LAV",
+          "price_override": null,
+          "price": 220.0,
+          "stock_quantity": 6,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 18,
+          "product": 5,
+          "name": "S / Deep Noir",
+          "size": "S",
+          "color_name": "Deep Noir",
+          "color_hex": "#202124",
+          "sku": "KD-DR-005-S-BLK",
+          "price_override": null,
+          "price": 220.0,
+          "stock_quantity": 7,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 16,
+          "product": 5,
+          "name": "S / Lavender Mist",
+          "size": "S",
+          "color_name": "Lavender Mist",
+          "color_hex": "#8975D9",
+          "sku": "KD-DR-005-S-LAV",
+          "price_override": null,
+          "price": 220.0,
+          "stock_quantity": 8,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 15,
+          "product": 5,
+          "name": "XS / Lavender Mist",
+          "size": "XS",
+          "color_name": "Lavender Mist",
+          "color_hex": "#8975D9",
+          "sku": "KD-DR-005-XS-LAV",
+          "price_override": null,
+          "price": 220.0,
+          "stock_quantity": 5,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        }
+      ],
+      "available_colors": [
+        {
+          "name": "Deep Noir",
+          "hex": "#202124"
+        },
+        {
+          "name": "Lavender Mist",
+          "hex": "#8975D9"
+        }
+      ],
+      "available_sizes": [
+        "M",
+        "S",
+        "XS"
+      ],
+      "created_at": "2026-10-18T13:21:56.602197Z"
+    },
+    {
+      "id": 4,
+      "name": "Structured Tailored Blazer",
+      "slug": "structured-tailored-blazer",
+      "sku": "KD-MB-004",
+      "short_description": "Single-breasted lightweight wool blazer in navy charcoal.",
+      "categories": [
+        {
+          "id": 9,
+          "name": "Jackets & Blazers",
+          "slug": "men-jackets",
+          "description": "",
+          "image": null,
+          "image_url": "",
+          "audience": "MEN",
+          "display_order": 1,
+          "is_active": true,
+          "is_featured": false,
+          "product_count": 1
+        },
+        {
+          "id": 2,
+          "name": "Men",
+          "slug": "men",
+          "description": "Modern menswear, structured tailoring, leather goods, and refined casualwear.",
+          "image": null,
+          "image_url": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000&auto=format&fit=crop",
+          "audience": "MEN",
+          "display_order": 2,
+          "is_active": true,
+          "is_featured": true,
+          "product_count": 3
+        }
+      ],
+      "audience": "MEN",
+      "regular_price": "310.00",
+      "sale_price": null,
+      "current_price": 310.0,
+      "discount_percent": 0,
+      "is_active": true,
+      "is_featured": true,
+      "is_bestseller": false,
+      "is_new": true,
+      "total_stock": 20,
+      "primary_image": {
+        "id": 7,
+        "image": null,
+        "image_url": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200&auto=format&fit=crop",
+        "alt_text": "Structured Tailored Blazer view 1",
+        "display_order": 0,
+        "is_primary": true,
+        "is_ai_generated": false,
+        "created_at": "2026-10-18T13:21:53.674398Z"
+      },
+      "model_3d": null,
+      "model_3d_url": "",
+      "variants": [
+        {
+          "id": 12,
+          "product": 4,
+          "name": "48 / Midnight Navy",
+          "size": "48",
+          "color_name": "Midnight Navy",
+          "color_hex": "#1B2A4A",
+          "sku": "KD-MB-004-48-NVY",
+          "price_override": null,
+          "price": 310.0,
+          "stock_quantity": 7,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 13,
+          "product": 4,
+          "name": "50 / Midnight Navy",
+          "size": "50",
+          "color_name": "Midnight Navy",
+          "color_hex": "#1B2A4A",
+          "sku": "KD-MB-004-50-NVY",
+          "price_override": null,
+          "price": 310.0,
+          "stock_quantity": 9,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 14,
+          "product": 4,
+          "name": "52 / Midnight Navy",
+          "size": "52",
+          "color_name": "Midnight Navy",
+          "color_hex": "#1B2A4A",
+          "sku": "KD-MB-004-52-NVY",
+          "price_override": null,
+          "price": 310.0,
+          "stock_quantity": 4,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        }
+      ],
+      "available_colors": [
+        {
+          "name": "Midnight Navy",
+          "hex": "#1B2A4A"
+        }
+      ],
+      "available_sizes": [
+        "48",
+        "50",
+        "52"
+      ],
+      "created_at": "2026-10-18T13:21:52.578376Z"
+    },
+    {
+      "id": 3,
+      "name": "Maison Orbit Leather Sneaker (3D Preview)",
+      "slug": "maison-orbit-leather-sneaker",
+      "sku": "KD-SH-003",
+      "short_description": "Low-top court sneaker in full-grain white Italian leather.",
+      "categories": [
+        {
+          "id": 2,
+          "name": "Men",
+          "slug": "men",
+          "description": "Modern menswear, structured tailoring, leather goods, and refined casualwear.",
+          "image": null,
+          "image_url": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000&auto=format&fit=crop",
+          "audience": "MEN",
+          "display_order": 2,
+          "is_active": true,
+          "is_featured": true,
+          "product_count": 3
+        },
+        {
+          "id": 4,
+          "name": "Shoes",
+          "slug": "shoes",
+          "description": "Architectural footwear, luxury leather sneakers, and timeless boots.",
+          "image": null,
+          "image_url": "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1000&auto=format&fit=crop",
+          "audience": "ALL",
+          "display_order": 4,
+          "is_active": true,
+          "is_featured": true,
+          "product_count": 1
+        }
+      ],
+      "audience": "MEN",
+      "regular_price": "210.00",
+      "sale_price": "185.00",
+      "current_price": 185.0,
+      "discount_percent": 11,
+      "is_active": true,
+      "is_featured": true,
+      "is_bestseller": true,
+      "is_new": true,
+      "total_stock": 38,
+      "primary_image": {
+        "id": 5,
+        "image": null,
+        "image_url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop",
+        "alt_text": "Maison Orbit Leather Sneaker (3D Preview) view 1",
+        "display_order": 0,
+        "is_primary": true,
+        "is_ai_generated": false,
+        "created_at": "2026-10-18T13:21:46.968516Z"
+      },
+      "model_3d": null,
+      "model_3d_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb",
+      "variants": [
+        {
+          "id": 8,
+          "product": 3,
+          "name": "41 / Clean White",
+          "size": "41",
+          "color_name": "Clean White",
+          "color_hex": "#FFFFFF",
+          "sku": "KD-SH-003-41-WHT",
+          "price_override": null,
+          "price": 185.0,
+          "stock_quantity": 8,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 9,
+          "product": 3,
+          "name": "42 / Clean White",
+          "size": "42",
+          "color_name": "Clean White",
+          "color_hex": "#FFFFFF",
+          "sku": "KD-SH-003-42-WHT",
+          "price_override": null,
+          "price": 185.0,
+          "stock_quantity": 14,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 10,
+          "product": 3,
+          "name": "43 / Clean White",
+          "size": "43",
+          "color_name": "Clean White",
+          "color_hex": "#FFFFFF",
+          "sku": "KD-SH-003-43-WHT",
+          "price_override": null,
+          "price": 185.0,
+          "stock_quantity": 11,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 11,
+          "product": 3,
+          "name": "44 / Clean White",
+          "size": "44",
+          "color_name": "Clean White",
+          "color_hex": "#FFFFFF",
+          "sku": "KD-SH-003-44-WHT",
+          "price_override": null,
+          "price": 185.0,
+          "stock_quantity": 5,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        }
+      ],
+      "available_colors": [
+        {
+          "name": "Clean White",
+          "hex": "#FFFFFF"
+        }
+      ],
+      "available_sizes": [
+        "41",
+        "42",
+        "43",
+        "44"
+      ],
+      "created_at": "2026-10-18T13:21:44.368514Z"
+    },
+    {
+      "id": 2,
+      "name": "Minimalist Sculptural Leather Tote",
+      "slug": "minimalist-sculptural-tote",
+      "sku": "KD-BG-002",
+      "short_description": "Structured calfskin tote with brushed silver hardware and suede lining.",
+      "categories": [
+        {
+          "id": 1,
+          "name": "Women",
+          "slug": "women",
+          "description": "Contemporary womenswear, tailored coats, refined dresses, and signature essentials.",
+          "image": null,
+          "image_url": "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
+          "audience": "WOMEN",
+          "display_order": 1,
+          "is_active": true,
+          "is_featured": true,
+          "product_count": 3
+        },
+        {
+          "id": 5,
+          "name": "Bags & Leather",
+          "slug": "bags",
+          "description": "Handcrafted Italian leather totes, structured shoulder bags, and luxury weekenders.",
+          "image": null,
+          "image_url": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop",
+          "audience": "ALL",
+          "display_order": 5,
+          "is_active": true,
+          "is_featured": true,
+          "product_count": 1
+        }
+      ],
+      "audience": "WOMEN",
+      "regular_price": "290.00",
+      "sale_price": null,
+      "current_price": 290.0,
+      "discount_percent": 0,
+      "is_active": true,
+      "is_featured": true,
+      "is_bestseller": true,
+      "is_new": false,
+      "total_stock": 23,
+      "primary_image": {
+        "id": 3,
+        "image": null,
+        "image_url": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1200&auto=format&fit=crop",
+        "alt_text": "Minimalist Sculptural Leather Tote view 1",
+        "display_order": 0,
+        "is_primary": true,
+        "is_ai_generated": false,
+        "created_at": "2026-10-18T13:21:42.587217Z"
+      },
+      "model_3d": null,
+      "model_3d_url": "",
+      "variants": [
+        {
+          "id": 7,
+          "product": 2,
+          "name": "One Size / Charcoal Noir",
+          "size": "One Size",
+          "color_name": "Charcoal Noir",
+          "color_hex": "#202124",
+          "sku": "KD-BG-002-BLK",
+          "price_override": null,
+          "price": 290.0,
+          "stock_quantity": 9,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 6,
+          "product": 2,
+          "name": "One Size / Cognac Tan",
+          "size": "One Size",
+          "color_name": "Cognac Tan",
+          "color_hex": "#8B4513",
+          "sku": "KD-BG-002-TAN",
+          "price_override": null,
+          "price": 290.0,
+          "stock_quantity": 14,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        }
+      ],
+      "available_colors": [
+        {
+          "name": "Charcoal Noir",
+          "hex": "#202124"
+        },
+        {
+          "name": "Cognac Tan",
+          "hex": "#8B4513"
+        }
+      ],
+      "available_sizes": [
+        "One Size"
+      ],
+      "created_at": "2026-10-18T13:21:41.642923Z"
+    },
+    {
+      "id": 1,
+      "name": "KleinDream Signature Atelier Coat",
+      "slug": "signature-atelier-coat",
+      "sku": "KD-CT-001",
+      "short_description": "Double-breasted virgin wool and cashmere overcoat in midnight noir.",
+      "categories": [
+        {
+          "id": 1,
+          "name": "Women",
+          "slug": "women",
+          "description": "Contemporary womenswear, tailored coats, refined dresses, and signature essentials.",
+          "image": null,
+          "image_url": "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
+          "audience": "WOMEN",
+          "display_order": 1,
+          "is_active": true,
+          "is_featured": true,
+          "product_count": 3
+        },
+        {
+          "id": 8,
+          "name": "Coats & Outerwear",
+          "slug": "coats",
+          "description": "",
+          "image": null,
+          "image_url": "",
+          "audience": "WOMEN",
+          "display_order": 2,
+          "is_active": true,
+          "is_featured": false,
+          "product_count": 1
+        }
+      ],
+      "audience": "WOMEN",
+      "regular_price": "380.00",
+      "sale_price": "320.00",
+      "current_price": 320.0,
+      "discount_percent": 15,
+      "is_active": true,
+      "is_featured": true,
+      "is_bestseller": true,
+      "is_new": true,
+      "total_stock": 51,
+      "primary_image": {
+        "id": 1,
+        "image": null,
+        "image_url": "https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=1200&auto=format&fit=crop",
+        "alt_text": "KleinDream Signature Atelier Coat view 1",
+        "display_order": 0,
+        "is_primary": true,
+        "is_ai_generated": false,
+        "created_at": "2026-10-18T13:21:38.814343Z"
+      },
+      "model_3d": null,
+      "model_3d_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb",
+      "variants": [
+        {
+          "id": 3,
+          "product": 1,
+          "name": "L / Noir Charcoal",
+          "size": "L",
+          "color_name": "Noir Charcoal",
+          "color_hex": "#202124",
+          "sku": "KD-CT-001-L-BLK",
+          "price_override": null,
+          "price": 320.0,
+          "stock_quantity": 8,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 5,
+          "product": 1,
+          "name": "M / Lavender Mist",
+          "size": "M",
+          "color_name": "Lavender Mist",
+          "color_hex": "#8975D9",
+          "sku": "KD-CT-001-M-LAV",
+          "price_override": null,
+          "price": 320.0,
+          "stock_quantity": 10,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 2,
+          "product": 1,
+          "name": "M / Noir Charcoal",
+          "size": "M",
+          "color_name": "Noir Charcoal",
+          "color_hex": "#202124",
+          "sku": "KD-CT-001-M-BLK",
+          "price_override": null,
+          "price": 320.0,
+          "stock_quantity": 15,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 4,
+          "product": 1,
+          "name": "S / Lavender Mist",
+          "size": "S",
+          "color_name": "Lavender Mist",
+          "color_hex": "#8975D9",
+          "sku": "KD-CT-001-S-LAV",
+          "price_override": null,
+          "price": 320.0,
+          "stock_quantity": 6,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        },
+        {
+          "id": 1,
+          "product": 1,
+          "name": "S / Noir Charcoal",
+          "size": "S",
+          "color_name": "Noir Charcoal",
+          "color_hex": "#202124",
+          "sku": "KD-CT-001-S-BLK",
+          "price_override": null,
+          "price": 320.0,
+          "stock_quantity": 12,
+          "low_stock_threshold": 5,
+          "is_active": true,
+          "is_in_stock": true
+        }
+      ],
+      "available_colors": [
+        {
+          "name": "Noir Charcoal",
+          "hex": "#202124"
+        },
+        {
+          "name": "Lavender Mist",
+          "hex": "#8975D9"
+        }
+      ],
+      "available_sizes": [
+        "L",
+        "M",
+        "S"
+      ],
+      "created_at": "2026-10-18T13:21:36.321750Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": 11,
+      "name": "TestCat",
+      "slug": "testcat",
+      "description": "",
+      "image": null,
+      "image_url": "",
+      "banner": null,
+      "parent": null,
+      "audience": "ALL",
+      "display_order": 0,
+      "is_active": true,
+      "is_featured": false,
+      "seo_title": "",
+      "seo_description": "",
+      "subcategories": [],
+      "product_count": 1
+    },
+    {
+      "id": 1,
+      "name": "Women",
+      "slug": "women",
+      "description": "Contemporary womenswear, tailored coats, refined dresses, and signature essentials.",
+      "image": null,
+      "image_url": "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop",
+      "banner": null,
+      "parent": null,
+      "audience": "WOMEN",
+      "display_order": 1,
+      "is_active": true,
+      "is_featured": true,
+      "seo_title": "",
+      "seo_description": "",
+      "subcategories": [
+        {
+          "id": 7,
+          "name": "Dresses",
+          "slug": "dresses",
+          "description": "",
+          "image": null,
+          "image_url": "",
+          "audience": "WOMEN",
+          "display_order": 1,
+          "is_active": true,
+          "is_featured": false,
+          "product_count": 1
+        },
+        {
+          "id": 8,
+          "name": "Coats & Outerwear",
+          "slug": "coats",
+          "description": "",
+          "image": null,
+          "image_url": "",
+          "audience": "WOMEN",
+          "display_order": 2,
+          "is_active": true,
+          "is_featured": false,
+          "product_count": 1
+        }
+      ],
+      "product_count": 3
+    },
+    {
+      "id": 2,
+      "name": "Men",
+      "slug": "men",
+      "description": "Modern menswear, structured tailoring, leather goods, and refined casualwear.",
+      "image": null,
+      "image_url": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000&auto=format&fit=crop",
+      "banner": null,
+      "parent": null,
+      "audience": "MEN",
+      "display_order": 2,
+      "is_active": true,
+      "is_featured": true,
+      "seo_title": "",
+      "seo_description": "",
+      "subcategories": [
+        {
+          "id": 9,
+          "name": "Jackets & Blazers",
+          "slug": "men-jackets",
+          "description": "",
+          "image": null,
+          "image_url": "",
+          "audience": "MEN",
+          "display_order": 1,
+          "is_active": true,
+          "is_featured": false,
+          "product_count": 1
+        },
+        {
+          "id": 10,
+          "name": "Shirts & Polos",
+          "slug": "men-shirts",
+          "description": "",
+          "image": null,
+          "image_url": "",
+          "audience": "MEN",
+          "display_order": 2,
+          "is_active": true,
+          "is_featured": false,
+          "product_count": 0
+        }
+      ],
+      "product_count": 3
+    },
+    {
+      "id": 3,
+      "name": "Kids",
+      "slug": "kids",
+      "description": "Premium, comfortable, and vibrant clothing designed for playful elegance.",
+      "image": null,
+      "image_url": "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=1000&auto=format&fit=crop",
+      "banner": null,
+      "parent": null,
+      "audience": "KIDS",
+      "display_order": 3,
+      "is_active": true,
+      "is_featured": true,
+      "seo_title": "",
+      "seo_description": "",
+      "subcategories": [],
+      "product_count": 1
+    },
+    {
+      "id": 4,
+      "name": "Shoes",
+      "slug": "shoes",
+      "description": "Architectural footwear, luxury leather sneakers, and timeless boots.",
+      "image": null,
+      "image_url": "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1000&auto=format&fit=crop",
+      "banner": null,
+      "parent": null,
+      "audience": "ALL",
+      "display_order": 4,
+      "is_active": true,
+      "is_featured": true,
+      "seo_title": "",
+      "seo_description": "",
+      "subcategories": [],
+      "product_count": 1
+    },
+    {
+      "id": 5,
+      "name": "Bags & Leather",
+      "slug": "bags",
+      "description": "Handcrafted Italian leather totes, structured shoulder bags, and luxury weekenders.",
+      "image": null,
+      "image_url": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1000&auto=format&fit=crop",
+      "banner": null,
+      "parent": null,
+      "audience": "ALL",
+      "display_order": 5,
+      "is_active": true,
+      "is_featured": true,
+      "seo_title": "",
+      "seo_description": "",
+      "subcategories": [],
+      "product_count": 1
+    },
+    {
+      "id": 6,
+      "name": "Accessories",
+      "slug": "accessories",
+      "description": "Sculptural jewelry, silk scarves, minimal watches, and handcrafted eyewear.",
+      "image": null,
+      "image_url": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
+      "banner": null,
+      "parent": null,
+      "audience": "ALL",
+      "display_order": 6,
+      "is_active": true,
+      "is_featured": true,
+      "seo_title": "",
+      "seo_description": "",
+      "subcategories": [],
+      "product_count": 1
+    }
+  ]
+}

@@ -87,7 +87,7 @@ export default function CartDrawer() {
                   {/* Thumbnail */}
                   <div className="relative h-20 w-16 sm:h-24 sm:w-20 bg-brand-light rounded-lg overflow-hidden flex-shrink-0 border border-brand-border/60">
                     <Image
-                      src={item.image_url || "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=400&auto=format&fit=crop"}
+                      src={item.image_url && !item.image_url.startsWith('/media/') ? item.image_url : "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=400&auto=format&fit=crop"}
                       alt={item.product_name}
                       fill
                       className="object-cover object-center"

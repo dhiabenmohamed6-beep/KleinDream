@@ -10,6 +10,7 @@ import ProductCard from '@/components/storefront/ProductCard';
 import { fetchProductBySlug, fetchRelatedProducts } from '@/lib/api';
 import { Product, ProductVariant } from '@/lib/types';
 import { useCartStore } from '@/lib/cart-store';
+import { resolveProductImage } from '@/lib/image-resolver';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -157,7 +158,7 @@ export default function ProductDetailPage() {
               {/* Main Active Image */}
               <div className="relative aspect-[3/4] w-full bg-brand-light rounded-2xl overflow-hidden border border-brand-border/60">
                 <Image
-                  src={images[activeImageIdx]?.image_url || images[activeImageIdx]?.image || ''}
+                  src={resolveProductImage(images[activeImageIdx], product?.name)}
                   alt={product.name}
                   fill
                   priority
@@ -182,7 +183,7 @@ export default function ProductDetailPage() {
                       className={`relative h-16 w-14 sm:h-20 sm:w-16 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 ${activeImageIdx === idx ? 'border-brand-lavender scale-105' : 'border-brand-border/60 opacity-70 hover:opacity-100'}`}
                     >
                       <Image
-                        src={img.image_url || img.image || ''}
+                        src={resolveProductImage(img, product?.name)}
                         alt={`Thumbnail ${idx + 1}`}
                         fill
                         className="object-cover object-center"

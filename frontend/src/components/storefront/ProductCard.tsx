@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { ShoppingBag, Eye, Box, Check } from 'lucide-react';
 import { Product } from '@/lib/types';
 import { useCartStore } from '@/lib/cart-store';
+import { resolveProductImage } from '@/lib/image-resolver';
 
 interface ProductCardProps {
   product: Product;
@@ -17,7 +18,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [added, setAdded] = useState(false);
   const { addItem } = useCartStore();
 
-  const primaryImage = product.primary_image?.image_url || product.primary_image?.image || "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop";
+  const primaryImage = resolveProductImage(product.primary_image, product.name);
   const has3D = Boolean(product.model_3d || product.model_3d_url);
 
   const handleQuickAdd = async (e: React.MouseEvent) => {

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { ArrowRight, Plus, Check, ShoppingBag, Box, Sparkles, Scissors, ShieldCheck, Truck } from 'lucide-react';
 import { Product, Category } from '@/lib/types';
 import { useCartStore } from '@/lib/cart-store';
+import { resolveProductImage } from '@/lib/image-resolver';
 
 interface EditorialShowcaseProps {
   products: Product[];
@@ -148,7 +149,7 @@ export default function EditorialShowcase({ products, categories }: EditorialSho
             <div className="lg:col-span-5 relative flex justify-center items-center py-4 sm:py-0">
               <div className="relative w-full max-w-sm aspect-[4/5] rounded-xl overflow-hidden border border-white/20 shadow-2xl bg-neutral-900/60 backdrop-blur-md">
                 <Image
-                  src={products[0]?.primary_image?.image_url || products[0]?.primary_image?.image || "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop"}
+                  src={resolveProductImage(products[0]?.primary_image, products[0]?.name || 'fashion')}
                   alt="KleinDream Atelier Piece"
                   fill
                   className="object-cover object-center brightness-90 hover:scale-105 transition-transform duration-700 ease-out"
@@ -265,7 +266,7 @@ export default function EditorialShowcase({ products, categories }: EditorialSho
               
               {/* 5 Product Cells */}
               {bestsellerGridProducts.map((product, idx) => {
-                const img = product.primary_image?.image_url || product.primary_image?.image || "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop";
+                const img = resolveProductImage(product.primary_image, product.name);
                 const isAddingThis = addingId === product.id;
                 const isAddedThis = addedId === product.id;
                 const regularPrice = Number(product.regular_price || 0);
@@ -468,7 +469,7 @@ export default function EditorialShowcase({ products, categories }: EditorialSho
         {/* Live Product Cards Visible on Scroll */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
           {visibleProducts.map((product) => {
-            const img = product.primary_image?.image_url || product.primary_image?.image || "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop";
+            const img = resolveProductImage(product.primary_image, product.name);
             const regularPrice = Number(product.regular_price || 0);
             const salePrice = product.sale_price ? Number(product.sale_price) : null;
             const hasDiscount = salePrice && salePrice < regularPrice;

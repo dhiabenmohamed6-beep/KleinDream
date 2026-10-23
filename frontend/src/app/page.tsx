@@ -7,6 +7,8 @@ import ProductCard from '@/components/storefront/ProductCard';
 import EditorialShowcase from '@/components/storefront/EditorialShowcase';
 import { fetchProducts, fetchCategories, fetchHeroBanners } from '@/lib/api';
 import { Product, Category, HeroBannerData } from '@/lib/types';
+import { resolveCategoryImage } from '@/lib/image-resolver';
+import fallbackData from '@/lib/fallback-data.json';
 
 export const revalidate = 0; // Fresh dynamic rendering
 
@@ -30,6 +32,14 @@ export default async function HomePage() {
   }
   if (productsResult.status === 'fulfilled') {
     allProducts = productsResult.value.results || [];
+  }
+
+  // Use fallback data when the API returns empty results (e.g., on Vercel before backend is ready)
+  if (categories.length === 0) {
+    categories = (fallbackData as any).categories || [];
+  }
+  if (allProducts.length === 0) {
+    allProducts = (fallbackData as any).products || [];
   }
 
   return (
@@ -61,7 +71,7 @@ export default async function HomePage() {
             >
               <div className="relative aspect-[4/5] w-full rounded-xl overflow-hidden bg-brand-light border border-brand-border/60 group-hover:shadow-card transition-all duration-300">
                 <Image
-                  src={cat.image_url || cat.image || "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=600&auto=format&fit=crop"}
+                  src={resolveCategoryImage(cat)}
                   alt={cat.name}
                   fill
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"

@@ -2,14 +2,20 @@
 const nextConfig = {
   skipTrailingSlashRedirect: true,
   async rewrites() {
+    // In local development, proxy to local Django server at port 8001.
+    // On Vercel, routing is handled by the root vercel.json multi-service rewrites.
+    if (process.env.VERCEL) {
+      return [];
+    }
+    const backend = process.env.BACKEND_URL || 'http://127.0.0.1:8001';
     return [
       {
         source: '/api/v1/:path*',
-        destination: 'http://127.0.0.1:8001/api/v1/:path*',
+        destination: `${backend}/api/v1/:path*`,
       },
       {
         source: '/media/:path*',
-        destination: 'http://127.0.0.1:8001/media/:path*',
+        destination: `${backend}/media/:path*`,
       },
     ];
   },
@@ -25,6 +31,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'raw.githubusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.vercel.app',
       },
       {
         protocol: 'http',
