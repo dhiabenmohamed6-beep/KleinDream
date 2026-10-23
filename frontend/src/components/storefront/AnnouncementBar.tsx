@@ -1,41 +1,80 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { fetchAnnouncement } from '@/lib/api';
 import { AnnouncementBarData } from '@/lib/types';
+
+const DEFAULT_MESSAGES = [
+  '✦  Complimentary delivery across Tunisia on orders over 150 DT',
+  '✦  New Arrivals — Maison Collection 2026 is now live',
+  '✦  Private Sale · Up to 40% off selected pieces',
+  '✦  3D Virtual Fitting available on all Shoes & Footwear',
+  '✦  Handcrafted in limited quantities — Shop before it sells out',
+  '✦  Express delivery in Tunisia · Order before 2 PM',
+  '✦  KleinDream Atelier & Maison · Est. Tunisia',
+];
 
 export default function AnnouncementBar() {
   const [data, setData] = useState<AnnouncementBarData | null>(null);
 
   useEffect(() => {
     fetchAnnouncement().then((res) => {
-      if (res && res.is_active) {
-        setData(res);
-      }
-    });
+      if (res && res.is_active) setData(res);
+    }).catch(() => {});
   }, []);
 
-  if (!data || !data.is_active) {
-    return (
-      <div className="bg-brand-charcoal text-white text-[10px] sm:text-xs py-1.5 sm:py-2 px-2 sm:px-4 text-center tracking-wide sm:tracking-wider font-light flex items-center justify-center gap-1.5">
-        <span className="truncate sm:whitespace-normal">Complimentary delivery across Tunisia on orders over 150 DT | KleinDream</span>
-      </div>
-    );
-  }
+  const messages = data?.is_active && data.text
+    ? [data.text, ...DEFAULT_MESSAGES]
+    : DEFAULT_MESSAGES;
 
-  const content = (
+  const bgColor = data?.background_color ?? '#0f0f1a';
+  const textColor = data?.text_color ?? '#d4c5f0';
+
+  // Duplicate for seamless loop
+  const ticker = [...messages, ...messages];
+
+  return (
     <div
-      style={{ backgroundColor: data.background_color, color: data.text_color }}
-      className="text-[10px] sm:text-xs py-1.5 sm:py-2 px-2 sm:px-4 text-center tracking-wide sm:tracking-wider font-light flex items-center justify-center gap-1.5 transition-colors"
+      className="overflow-hidden relative"
+      style={{ backgroundColor: bgColor, color: textColor }}
+      aria-label="Announcements"
     >
-      <span className="truncate sm:whitespace-normal">{data.text}</span>
+      {/* Fade edges */}
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 w-16 z-10"
+        style={{ background: `linear-gradient(to right, ${bgColor}, transparent)` }}
+      />
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 w-16 z-10"
+        style={{ background: `linear-gradient(to left, ${bgColor}, transparent)` }}
+      />
+
+      {/* Scrolling track */}
+      <div
+        className="flex items-center py-2 whitespace-nowrap"
+        style={{
+          animation: 'marquee 50s linear infinite',
+          willChange: 'transform',
+        }}
+      >
+        {ticker.map((msg, i) => (
+          <span
+            key={i}
+            className="inline-flex items-center gap-3 px-6 text-[11px] sm:text-xs tracking-widest font-light"
+          >
+            {msg}
+            <span className="opacity-25 text-[8px]">◆</span>
+          </span>
+        ))}
+      </div>
+
+      <style>{`
+        @keyframes marquee {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
     </div>
   );
-
-  if (data.link) {
-    return <Link href={data.link} className="block hover:opacity-95">{content}</Link>;
-  }
-
-  return content;
 }
+
