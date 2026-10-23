@@ -28,7 +28,8 @@
     {
       "source": "/((?!api/|media/).*)",
       "destination": {
-        "service": "frontend"
+        "service": "frontend",
+        "path": "/$1"
       }
     }
   ]
