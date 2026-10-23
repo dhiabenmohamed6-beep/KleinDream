@@ -19,6 +19,19 @@
           "is_active": true,
           "is_featured": true,
           "product_count": 3
+        },
+        {
+          "id": 10,
+          "name": "Shirts & Polos",
+          "slug": "men-shirts",
+          "description": "",
+          "image": null,
+          "image_url": "",
+          "audience": "MEN",
+          "display_order": 2,
+          "is_active": true,
+          "is_featured": false,
+          "product_count": 1
         }
       ],
       "audience": "MEN",
@@ -1117,7 +1130,7 @@
           "display_order": 2,
           "is_active": true,
           "is_featured": false,
-          "product_count": 0
+          "product_count": 1
         }
       ],
       "product_count": 3
@@ -1139,7 +1152,7 @@
       "seo_title": "",
       "seo_description": "",
       "subcategories": [],
-      "product_count": 0
+      "product_count": 1
     },
     {
       "id": 3,

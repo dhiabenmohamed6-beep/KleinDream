@@ -1,4 +1,5 @@
 import { Product, Category, Cart, Order, User, AnnouncementBarData, HeroBannerData, StoreSettingsData, AIAsset, AIJob } from './types';
+import fallbackData from './fallback-data.json';
 
 export const API_BASE = typeof window === 'undefined'
   ? (process.env.INTERNAL_BACKEND_URL || 'http://127.0.0.1:8001/api/v1')
@@ -15,41 +16,151 @@ function getGuestHeader(guestToken?: string): Record<string, string> {
   return token ? { 'X-Guest-Token': token } : {};
 }
 
+// In-memory catalog filtering fallback when backend API is unreachable or fails
+function filterFallbackProducts(params: Record<string, any>): { count: number; results: Product[] } {
+  let list = [...((fallbackData as any).products || [])] as Product[];
+
+  if (params.category) {
+    const catSlug = String(params.category).toLowerCase().trim();
+    list = list.filter((p) => {
+      if (Array.isArray(p.categories)) {
+        return p.categories.some((c: any) => {
+          const cSlug = (c.slug || '').toLowerCase();
+          const cName = (c.name || '').toLowerCase();
+          if (cSlug === catSlug || cName === catSlug) return true;
+          if (catSlug === 'women' && (c.audience === 'WOMEN' || p.audience === 'WOMEN')) return true;
+          if (catSlug === 'men' && (c.audience === 'MEN' || p.audience === 'MEN')) return true;
+          if (catSlug === 'kids' && (c.audience === 'KIDS' || p.audience === 'KIDS')) return true;
+          return false;
+        });
+      }
+      return false;
+    });
+  }
+
+  if (params.audience) {
+    const aud = String(params.audience).toUpperCase().trim();
+    list = list.filter((p) => {
+      const pAud = (p.audience || '').toUpperCase();
+      return pAud === aud || pAud === 'ALL' || pAud === 'UNISEX';
+    });
+  }
+
+  if (params.search) {
+    const q = String(params.search).toLowerCase().trim();
+    list = list.filter((p) => 
+      p.name?.toLowerCase().includes(q) || 
+      p.short_description?.toLowerCase().includes(q) ||
+      p.sku?.toLowerCase().includes(q)
+    );
+  }
+
+  if (params.on_sale === 'true' || params.on_sale === true) {
+    list = list.filter((p) => Boolean(p.sale_price) && Number(p.sale_price) < Number(p.regular_price));
+  }
+
+  if (params.in_stock === 'true' || params.in_stock === true) {
+    list = list.filter((p) => (p.total_stock ?? 1) > 0);
+  }
+
+  // Sorting
+  if (params.sort === 'price_asc') {
+    list.sort((a, b) => Number(a.current_price || a.regular_price) - Number(b.current_price || b.regular_price));
+  } else if (params.sort === 'price_desc') {
+    list.sort((a, b) => Number(b.current_price || b.regular_price) - Number(a.current_price || a.regular_price));
+  } else if (params.sort === 'bestseller') {
+    list.sort((a, b) => (b.is_bestseller ? 1 : 0) - (a.is_bestseller ? 1 : 0));
+  } else {
+    list.sort((a, b) => (b.id || 0) - (a.id || 0));
+  }
+
+  return {
+    count: list.length,
+    results: list,
+  };
+}
+
 // Storefront Catalog APIs
 export async function fetchProducts(params: Record<string, any> = {}): Promise<{ count: number; results: Product[] }> {
-  const query = new URLSearchParams();
-  Object.entries(params).forEach(([key, val]) => {
-    if (val !== undefined && val !== null && val !== '') {
-      query.append(key, String(val));
+  try {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([key, val]) => {
+      if (val !== undefined && val !== null && val !== '') {
+        query.append(key, String(val));
+      }
+    });
+    const res = await fetch(`${API_BASE}/catalog/products/?${query.toString()}`, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.results)) {
+        return data;
+      }
     }
-  });
-  const res = await fetch(`${API_BASE}/catalog/products/?${query.toString()}`, { cache: 'no-store' });
-  if (!res.ok) throw new Error('Failed to fetch products');
-  return res.json();
+  } catch {
+    // API not responding, gracefully fall back to local catalog
+  }
+  return filterFallbackProducts(params);
 }
 
 export async function fetchProductBySlug(slug: string): Promise<Product> {
-  const res = await fetch(`${API_BASE}/catalog/products/${slug}/`, { cache: 'no-store' });
-  if (!res.ok) throw new Error('Product not found');
-  return res.json();
+  try {
+    const res = await fetch(`${API_BASE}/catalog/products/${slug}/`, { cache: 'no-store' });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch {
+    // Fall back
+  }
+  const found = ((fallbackData as any).products || []).find((p: any) => p.slug === slug);
+  if (found) return found as Product;
+  throw new Error('Product not found');
 }
 
 export async function fetchRelatedProducts(slug: string): Promise<Product[]> {
-  const res = await fetch(`${API_BASE}/catalog/products/${slug}/related/`, { cache: 'no-store' });
-  if (!res.ok) return [];
-  return res.json();
+  try {
+    const res = await fetch(`${API_BASE}/catalog/products/${slug}/related/`, { cache: 'no-store' });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch {
+    // Fall back
+  }
+  return (((fallbackData as any).products || []) as Product[])
+    .filter((p) => p.slug !== slug)
+    .slice(0, 4);
 }
 
 export async function fetchCategories(): Promise<{ count: number; results: Category[] }> {
-  const res = await fetch(`${API_BASE}/catalog/categories/?parent=null`, { cache: 'no-store' });
-  if (!res.ok) throw new Error('Failed to fetch categories');
-  return res.json();
+  try {
+    const res = await fetch(`${API_BASE}/catalog/categories/?parent=null`, { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.results)) {
+        return data;
+      }
+    }
+  } catch {
+    // Fall back
+  }
+  const cats = ((fallbackData as any).categories || []) as Category[];
+  return {
+    count: cats.length,
+    results: cats,
+  };
 }
 
 export async function fetchCategoryBySlug(slug: string): Promise<Category> {
-  const res = await fetch(`${API_BASE}/catalog/categories/${slug}/`, { cache: 'no-store' });
-  if (!res.ok) throw new Error('Category not found');
-  return res.json();
+  try {
+    const res = await fetch(`${API_BASE}/catalog/categories/${slug}/`, { cache: 'no-store' });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch {
+    // Fall back
+  }
+  const found = ((fallbackData as any).categories || []).find((c: any) => c.slug === slug);
+  if (found) return found as Category;
+  throw new Error('Category not found');
 }
 
 // Content & Settings

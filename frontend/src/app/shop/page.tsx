@@ -82,6 +82,21 @@ function ShopContent() {
       nextParams.delete(key);
     } else {
       nextParams.set(key, value);
+
+      // Reconcile conflicting audience and category
+      if (key === 'audience') {
+        const curCat = categories.find((c) => c.slug === categoryParam);
+        if (curCat && curCat.audience && curCat.audience !== 'ALL' && curCat.audience !== value) {
+          nextParams.delete('category');
+        }
+      } else if (key === 'category') {
+        const selCat = categories.find((c) => c.slug === value);
+        if (selCat && selCat.audience && selCat.audience !== 'ALL') {
+          if (audienceParam && audienceParam !== selCat.audience) {
+            nextParams.delete('audience');
+          }
+        }
+      }
     }
     router.push(`/shop?${nextParams.toString()}`);
   };
